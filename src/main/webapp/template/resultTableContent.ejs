@@ -1,0 +1,12 @@
+<% for(var i = 0; i < result.length; i++) {%>
+<tr>
+	<td><%= result[i].id %></td>
+	<td class="truncate"><%= result[i].title %></td>
+	<td class="truncate"><%= result[i].database %></td>
+	<td><%= result[i].year %></td>
+	<td>
+		<a href="<%= result[i].link %>" target="_blank" title="Link to paper" class="btn btn-primary btn-xs" style="width: 45%"><span class="glyphicon glyphicon-info-sign"></span></a>
+		<button type="button" title="Download as bibtex" class="btn btn-success btn-xs" style="width: 45%"><span class="glyphicon glyphicon-download"></span></button>
+	</td>
+</tr>
+<% } %>
