@@ -30,12 +30,30 @@ public class SearchEngineResultModel {
 		this.link = link;
 	}
 	
+	
+	/**
+	 * @param title
+	 * @param database
+	 * @param year
+	 * @param link
+	 * @param bibtex
+	 */
+	public SearchEngineResultModel(String title, String database, String year, String link, String bibtex) {
+		super();
+		this.title = title;
+		this.database = database;
+		this.year = year;
+		this.link = link;
+		this.bibtex = bibtex;
+	}
+
 	/**
 	 * @return the id
 	 */
 	public int getId() {
 		return id;
 	}
+	
 	/**
 	 * @param id the id to set
 	 */

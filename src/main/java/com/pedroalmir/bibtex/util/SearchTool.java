@@ -62,14 +62,18 @@ public class SearchTool {
 	 */
 	private ArrayList<SearchEngineResultModel> searchScienceDirect(SearchEngineExecutionModel executionModel){
 		/* Go to ScienceDirect digital library page */
-		this.driver.get("http://www.sciencedirect.com/");
-		
-		WebElement query = this.driver.findElement(By.id("qs_all"));
-		query.clear(); query.sendKeys(executionModel.getSearch());
-		this.driver.findElement(By.id("submit_search")).click();
-		
-		WebDriverWait wait = new WebDriverWait(this.driver, 5);
-		wait.until(ExpectedConditions.titleContains("Results"));
+		if(executionModel.getUrl() != null && !executionModel.getUrl().isEmpty()){
+			this.driver.get(executionModel.getUrl());
+		}else{
+			this.driver.get("http://www.sciencedirect.com/");
+			
+			WebElement query = this.driver.findElement(By.id("qs_all"));
+			query.clear(); query.sendKeys(executionModel.getSearch());
+			this.driver.findElement(By.id("submit_search")).click();
+			
+			WebDriverWait wait = new WebDriverWait(this.driver, 5);
+			wait.until(ExpectedConditions.titleContains("Results"));
+		}
 		
 		List<WebElement> articleList = this.driver.findElement(By.className("articleList")).findElements(By.className("detail"));
 		ArrayList<SearchEngineResultModel> results = new ArrayList<SearchEngineResultModel>();
@@ -81,8 +85,13 @@ public class SearchTool {
 			String link = titleElement.getAttribute("href");
 			String year = "N/A";
 			
-			results.add(new SearchEngineResultModel(title, "ACM Digital Library", year, link));
+			results.add(new SearchEngineResultModel(title, "Science Direct", year, link));
 		}
+		
+		/*for(SearchEngineResultModel result : results){
+			this.driver.get(result.getLink());
+		}*/
+		
 		return results;
 	}
 	
@@ -91,21 +100,48 @@ public class SearchTool {
 	 * @return
 	 */
 	private ArrayList<SearchEngineResultModel> searchScholar(SearchEngineExecutionModel executionModel){
-		/* Go to Google Scholar page */
-		driver.get("http://scholar.google.com.br/scholar?hl=pt-BR&q=" + executionModel.getSearch().replaceAll(" ", "+"));
+		this.driver = new HtmlUnitDriver(true);
 		
+		/* Go to Google Scholar page */
+		if(executionModel.getUrl() != null && !executionModel.getUrl().isEmpty()){
+			this.driver.get(executionModel.getUrl());
+		}else{
+			this.driver.get("http://scholar.google.com.br/scholar?hl=pt-BR&q=" + executionModel.getSearch().replaceAll(" ", "+"));
+		}
+		
+		WebDriverWait wait = new WebDriverWait(this.driver, 5);
 		List<WebElement> papers = driver.findElements(By.className("gs_rt"));
 		ArrayList<SearchEngineResultModel> results = new ArrayList<SearchEngineResultModel>();
 		
-		for(WebElement paper : papers){
-			WebElement titleElement = paper.findElement(By.tagName("a"));
+		int aux = executionModel.getResultsPerSearchEngine(), count = 0;
+		while(true){
+			for(WebElement paper : papers){
+				WebElement titleElement = paper.findElement(By.tagName("a"));
+				
+				String title = titleElement.getText();
+				String link = titleElement.getAttribute("href");
+				String year = "N/A";
+				
+				paper.findElement(By.xpath("..")).findElement(By.linkText("Citar")).click();
+				wait.until(ExpectedConditions.presenceOfElementLocated(By.linkText("Importe para o BibTeX")));
+				
+				
+				this.driver.get(this.driver.findElement(By.id("gs_citd")).findElement(By.linkText("Importe para o BibTeX")).getAttribute("href"));
+				String bibtex = this.driver.getPageSource();
+				
+				results.add(new SearchEngineResultModel(title, "Google Scholar", year, link, bibtex));
+			}
 			
-			String title = titleElement.getText();
-			String link = titleElement.getAttribute("href");
-			String year = "N/A";
-			
-			results.add(new SearchEngineResultModel(title, "Google Scholar", year, link));
+			aux -= 10; count += 10;
+			if(aux <= 0){
+				break;
+			}else{
+				driver.get("http://scholar.google.com.br/scholar?hl=pt-BR&start=" + count + "&q=" + executionModel.getSearch().replaceAll(" ", "+"));
+				papers = driver.findElements(By.className("gs_rt"));
+			}
 		}
+		
+		this.driver = new HtmlUnitDriver();
 		return results;
 	}
 	
@@ -115,14 +151,18 @@ public class SearchTool {
 	 */
 	private ArrayList<SearchEngineResultModel> searchACM(SearchEngineExecutionModel executionModel){
 		/* Go to ACM digital library page */
-		this.driver.get("http://dl.acm.org/");
-		
-		WebElement query = this.driver.findElement(By.name("query"));
-		query.clear(); query.sendKeys(executionModel.getSearch());
-		this.driver.findElement(By.name("Go")).click();
-		
-		WebDriverWait wait = new WebDriverWait(this.driver, 5);
-		wait.until(ExpectedConditions.titleContains("Results"));
+		if(executionModel.getUrl() != null && !executionModel.getUrl().isEmpty()){
+			this.driver.get(executionModel.getUrl());
+		}else{
+			this.driver.get("http://dl.acm.org/");
+			
+			WebElement query = this.driver.findElement(By.name("query"));
+			query.clear(); query.sendKeys(executionModel.getSearch());
+			this.driver.findElement(By.name("Go")).click();
+			
+			WebDriverWait wait = new WebDriverWait(this.driver, 5);
+			wait.until(ExpectedConditions.titleContains("Results"));
+		}
 		
 		List<WebElement> links = this.driver.findElements(By.tagName("a"));
 		ArrayList<SearchEngineResultModel> results = new ArrayList<SearchEngineResultModel>();
@@ -134,6 +174,15 @@ public class SearchTool {
 				results.add(new SearchEngineResultModel(title, "ACM Digital Library", year, link));
 			}
 		}
+		
+		String idPaper = null;
+		for(SearchEngineResultModel result : results){
+			this.driver.get(result.getLink());
+			idPaper = this.driver.findElement(By.linkText("BibTeX")).getAttribute("href").split("id=")[1].split("&")[0]; 
+			this.driver.get("http://dl.acm.org/exportformats.cfm?id=" + idPaper + "&expformat=bibtex&_cf_containerId=theformats_body&_cf_nodebug=true&_cf_nocache=true&_cf_rc=2");
+			result.setBibtex(this.driver.findElement(By.id(idPaper)).getText());
+		}
+		
 		return results;
 	}
 	
@@ -143,9 +192,22 @@ public class SearchTool {
 	 */
 	private ArrayList<SearchEngineResultModel> searchIEEE(SearchEngineExecutionModel executionModel){
 		/* Go to IEEE digital library page */
-		driver.get("http://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&queryText=" + executionModel.getSearch().replaceAll(" ", "+"));
+		if(executionModel.getUrl() != null && !executionModel.getUrl().isEmpty()){
+			this.driver.get(executionModel.getUrl());
+		}else{
+			String query = executionModel.getSearch().replaceAll(" ", "+");
+			if(executionModel.getResultsPerSearchEngine() > 0 && executionModel.getResultsPerSearchEngine() < 100){
+				query += "&rowsPerPage=" + executionModel.getResultsPerSearchEngine() + "&pageNumber=1&resultAction=ROWS_PER_PAGE";
+			}else if(executionModel.getResultsPerSearchEngine() > 100){
+				query += "&rowsPerPage=100&pageNumber=1&resultAction=ROWS_PER_PAGE";
+			}else{
+				query += "&rowsPerPage=25&pageNumber=1&resultAction=ROWS_PER_PAGE";
+			}
+			this.driver.get("http://ieeexplore.ieee.org/search/searchresult.jsp?newsearch=true&queryText=" + query);
+		}
 		
-		WebElement resultList = driver.findElement(By.className("Results"));
+		
+		WebElement resultList = this.driver.findElement(By.className("Results"));
 		List<WebElement> papers = resultList.findElements(By.className("noAbstract"));
 		
 		ArrayList<SearchEngineResultModel> results = new ArrayList<SearchEngineResultModel>();
@@ -158,6 +220,19 @@ public class SearchTool {
 			String year = detail.getText().split("Publication Year:")[1].trim().split(" ")[0].trim().substring(0, 4);
 			
 			results.add(new SearchEngineResultModel(title, "IEEE Digital Library", year, link));
+		}
+		
+		for(SearchEngineResultModel result : results){
+			this.driver.get(result.getLink());
+			
+			this.driver.findElement(By.id("action-download-document-citations")).findElement(By.tagName("a")).click();
+			this.driver.findElement(By.id("download-bibtex")).click();
+			this.driver.findElement(By.id("download_citations_form")).submit();
+			
+			for(String window : this.driver.getWindowHandles()){
+				this.driver.switchTo().window(window);
+				System.out.println(this.driver.getPageSource());
+			}
 		}
 		return results;
 	}

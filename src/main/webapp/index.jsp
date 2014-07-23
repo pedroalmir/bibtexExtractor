@@ -76,7 +76,7 @@
       		Maecenas vitae elit ut turpis egestas tempor. Praesent imperdiet rhoncus purus quis sagittis. 
       		Nulla ultricies eros id augue dictum tincidunt. Nunc egestas aliquet fringilla.</p>
       		<div class="row">
-      			<div class="col-md-5">
+      			<div class="col-md-6">
 					<div class="panel panel-primary">
 						<div class="panel-heading">
 					    	<h3 class="panel-title">Search</h3>
@@ -90,19 +90,19 @@
 								  	</div>
 								  	<div class="form-group">
 								  		<label for="searchEngines">Search engines*</label>
-										<select multiple class="form-control" id="searchEngines" name="searchEngines">
+										<select multiple class="form-control" id="searchEngines">
 											<option value="IEEE">IEEE Digital Library</option>
 											<option value="ACM">ACM Library</option>
 											<option value="Scholar" selected="selected">Google Scholar</option>
 											<option value="ScienceDirect">Science Direct</option>
 										</select>
 									</div>
-								  	<div class="form-group">
-								    	<label for="search">Results per Search Engine*</label>
-								    	<input type="number" class="form-control" id="maxNumberOfResults" placeholder="" value="50">
-								  	</div>
+								  	<!--div class="form-group">
+								    	<label for="resultsPerSearchEngine">Results per Search Engine*</label>
+								    	<input type="number" class="form-control" id="resultsPerSearchEngine" placeholder="" value="50">
+								  	</div-->
 							  	</div>
-						  		<div class="col-sm-6">
+						  		<!-- div class="col-sm-6">
 						  			<div class="form-group">
 							    		<label for="start">From</label>
 							    		<input type="date" class="form-control" id="fromYear">
@@ -113,9 +113,9 @@
 							    		<label for="end">To</label>
 							    		<input type="date" class="form-control" id="toYear">
 							    	</div>
-						  		</div>
+						  		</div-->
 						  		<div class="col-sm-12">
-						  			<div class="form-group" style="margin-top: 8px;">
+						  			<div class="form-group" style="margin-top: 28px;">
 										<button id="doit" type="button" class="btn btn-success pull-right" style="width: 100%">
 											DoIt !
 										</button>
@@ -125,28 +125,38 @@
 					  	</div>
 					</div>
       			</div>
-      			<div class="col-md-7">
+      			<div class="col-md-6">
       				<div class="panel panel-primary">
 						<div class="panel-heading">
-					    	<h3 class="panel-title">Upload a new search engine</h3>
+					    	<h3 class="panel-title">Export based on a URL</h3>
 					  	</div>
 					  	<div class="panel-body">
-					  		<form action="" enctype="multipart/form-data" method="post">
+					  		<form action="">
 					  			<div class="col-sm-12">
+					  				<div class="form-group">
+								    	<label for="searchURL">String*</label>
+								    	<input type="text" class="form-control" id="searchURL" placeholder="What do you want search?" value="Fuzzy System Framework">
+								  	</div>
+								  	
 						  			<div class="form-group">
-								    	<label for="pluginName">Name*</label>
-								    	<input type="text" class="form-control" id="pluginName" name="pluginName" placeholder="Enter with the name">
+								  		<label for="searchEnginesURL">Search engines*</label>
+										<select class="form-control" id="searchEnginesURL">
+											<option value="IEEE">IEEE Digital Library</option>
+											<option value="ACM">ACM Library</option>
+											<option value="Scholar">Google Scholar</option>
+											<option value="ScienceDirect" selected="selected">Science Direct</option>
+										</select>
+									</div>
+									
+									<div class="form-group">
+								    	<label for="url">URL*</label>
+								    	<input type="text" class="form-control" id="url" placeholder="URL" value="http://www.sciencedirect.com/science?_ob=ArticleListURL&_method=tag&sort=d&sisrterm=&_ArticleListID=-611123689&view=c&_chunk=0&count=1000&_st=&refsource=&md5=b5a790f86015c3e8a26217dd4f7b97a6&searchtype=a&originPage=rslt_list&filterType=">
 								  	</div>
+									
 								  	<div class="form-group">
-								    	<label for="pluginDescription">Description</label>
-								    	<textarea class="form-control" rows="8" id="pluginDescription" name="pluginDescription" placeholder="Enter with the description"></textarea>
-								  	</div>
-								  	<div class="form-group">
-								  		<label for="pluginFile">File input*</label>
-								  		<input type="file" id="pluginFile" name="pluginFile">
-								  	</div>
-								  	<div class="form-group">
-								  		<input type="submit" id="upload" class="btn btn-primary pull-right" style="width: 100%" value="Upload" disabled="disabled">
+								  		<button id="exportBasedOnURL" type="button" class="btn btn-primary pull-right" style="width: 100%">
+											Export !
+										</button>
 									</div>
 							  	</div>
 					  		</form>
@@ -174,47 +184,18 @@
 						        		</tr>
 						      		</thead>
 	      							<tbody id="tableContent">
-	        							<tr>
-	          								<td>1</td>
-	          								<td class="truncate">A Fuzzy Expert System Framework Using Object-Oriented Techniques</td>
-	          								<td class="truncate">IEEE Digital Library</td>
-	          								<td>2008</td>
-	          								<td>
-	          									<button type="button" title="Link" class="btn btn-primary btn-xs" style="width: 45%"><span class="glyphicon glyphicon-info-sign"></span></button>
-	          									<button type="button" title="Download as bibtex" class="btn btn-success btn-xs" style="width: 45%"><span class="glyphicon glyphicon-download"></span></button>
-	          								</td>
-	        							</tr>
-	        							<tr>
-	          								<td>2</td>
-	          								<td class="truncate">FITSK: online local learning with generic fuzzy input Takagi-Sugeno-Kang fuzzy framework for nonlinear system estimation</td>
-	          								<td class="truncate">IEEE Digital Library</td>
-	          								<td>2006</td>
-	          								<td>
-	          									<button type="button" class="btn btn-primary btn-xs" style="width: 45%"><span class="glyphicon glyphicon-info-sign"></span></button>
-	          									<button type="button" class="btn btn-success btn-xs" style="width: 45%"><span class="glyphicon glyphicon-download"></span></button>
-	          								</td>
-	        							</tr>
-	        							<tr>
-	          								<td>3</td>
-	          								<td class="truncate">Configuring an embedded system by the concepts of emotional design by using a non-additive fuzzy integral based FMCDM framework</td>
-	          								<td class="truncate">IEEE Digital Library</td>
-	          								<td>2010</td>
-	          								<td>
-	          									<button type="button" class="btn btn-primary btn-xs" style="width: 45%"><span class="glyphicon glyphicon-info-sign"></span></button>
-	          									<button type="button" class="btn btn-success btn-xs" style="width: 45%"><span class="glyphicon glyphicon-download"></span></button>
-	          								</td>
-	        							</tr>
 							      	</tbody>
 							    </table>
 							</div>
 							<div class="col-sm-offset-9 col-sm-3">
-								<button type="button" class="btn btn-primary" style="width: 100%"><span class="glyphicon glyphicon-download"></span> Export to Bibtex File</button>
+								<button type="button" class="btn btn-primary" style="width: 100%" data-toggle="modal" data-target="#finalBibTeXModal"><span class="glyphicon glyphicon-download"></span> Export to Bibtex File</button>
 							</div>
 						</div>
 					</div>
 				</div>
       		</div>
     	</div>
+    	<div id="modals"></div>
     	<div id="footer">
       		<div class="container">
         		<p class="text-muted">Developed by <a href="http://pedroalmir.com">Pedro Almir</a> © 2014</p>
@@ -225,18 +206,25 @@
 		        return window.JSON && window.JSON.parse ? window.JSON.parse(data) : (new Function("return " + data))(); 
 		    }
 	
-		    function sendRequest(urlToSend, dataToSend){
+		    function sendRequest(urlToSend, dataToSend, target){
 		    	$.ajax({
 		    		url: urlToSend,
 		    		type: 'POST',
 		    		data: {json: JSON.stringify(dataToSend)},
 		    		beforeSend: function(){
 		    			/* Active the loader */
-		    			$('#doit').button('loading');
+		    			target.button('loading');
 		    		}, success: function(data, textStatus, jqXHR){
 		    			var result = parseJSON(data);
+		    			
 		    			/* Load a template file, then render it with data */
-		    			html = new EJS({url: '${pageContext.request.contextPath}/template/resultTableContent.ejs'}).render({result: result});
+		    			var html = new EJS({url: '${pageContext.request.contextPath}/template/resultTableContent.ejs'}).render({result: result});
+		    			var modals = new EJS({url: '${pageContext.request.contextPath}/template/bibtexModal.ejs'}).render({result: result});
+		    			var finalBibTex = new EJS({url: '${pageContext.request.contextPath}/template/finalBibtexModal.ejs'}).render({result: result}); 
+		    			
+		    			$('#modals').html(modals);
+		    			$('#modals').append(finalBibTex);
+		    			
 		    			$('#tableContent').html(html);
 		    			$('#tableCaption').text(dataToSend.search);
 		    			
@@ -245,7 +233,7 @@
 		    			console.log(textStatus);
 		    		}, complete: function(jqXHR, textStatus){
 		    			/* Disable the loader*/
-		    			$('#doit').button('reset');
+		    			target.button('reset');
 		    		}
 		    	});
 		    }
@@ -256,11 +244,23 @@
 		    		var json = {
 		    				search: $('#search').val(),
 		    				searchEngines: $('#searchEngines').val(),
-		    				fromYear: $('#fromYear').val(),
-		    				toYear: $('#toYear').val(),
 		    			};
 		    		console.log(json);
-		    		sendRequest('${pageContext.request.contextPath}/search', json);
+		    		sendRequest('${pageContext.request.contextPath}/search', json, $('#doit'));
+		    	});
+		    	$('#exportBasedOnURL').click(function(){
+		    		$('#resultsPanel').fadeOut("slow","swing");
+		    		
+		    		var options = [];
+		    		options.push($('#searchEnginesURL').val());
+		    		
+		    		var json = {
+		    				search: $('#searchURL').val(),
+		    				searchEngines: options,
+		    				url: $('#url').val(),
+		    			};
+		    		console.log(json);
+		    		sendRequest('${pageContext.request.contextPath}/search', json, $('#exportBasedOnURL'));
 		    	});
 		    });
 	    </script>

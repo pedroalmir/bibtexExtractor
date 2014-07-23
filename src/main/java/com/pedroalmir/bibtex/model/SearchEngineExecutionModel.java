@@ -13,14 +13,14 @@ public class SearchEngineExecutionModel {
 	
 	private String search;
 	private String[] searchEngines;
-	private String fromYear;
-	private String toYear;
+	private String url;
+	private int resultsPerSearchEngine;
 	
 	/**
 	 * Default constructor
 	 */
 	public SearchEngineExecutionModel() {
-		
+		this.resultsPerSearchEngine = 50;
 	}
 	
 	/**
@@ -48,40 +48,40 @@ public class SearchEngineExecutionModel {
 		this.searchEngines = searchEngines;
 	}
 
-	/**
-	 * @return the fromYear
-	 */
-	public String getFromYear() {
-		return fromYear;
-	}
-
-	/**
-	 * @param fromYear the fromYear to set
-	 */
-	public void setFromYear(String fromYear) {
-		this.fromYear = fromYear;
-	}
-
-	/**
-	 * @return the toYear
-	 */
-	public String getToYear() {
-		return toYear;
-	}
-
-	/**
-	 * @param toYear the toYear to set
-	 */
-	public void setToYear(String toYear) {
-		this.toYear = toYear;
-	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "SearchEngineExecutionModel [search=" + search + ", searchEngines=" + Arrays.toString(searchEngines)
-				+ ", fromYear=" + fromYear + ", toYear=" + toYear + "]";
+		return "SearchEngineExecutionModel [search=" + search + ", searchEngines=" + Arrays.toString(searchEngines) + "]";
+	}
+
+	/**
+	 * @return the resultsPerSearchEngine
+	 */
+	public int getResultsPerSearchEngine() {
+		return resultsPerSearchEngine;
+	}
+
+	/**
+	 * @param resultsPerSearchEngine the resultsPerSearchEngine to set
+	 */
+	public void setResultsPerSearchEngine(int resultsPerSearchEngine) {
+		this.resultsPerSearchEngine = resultsPerSearchEngine;
+	}
+
+	/**
+	 * @return the url
+	 */
+	public String getUrl() {
+		return url;
+	}
+
+	/**
+	 * @param url the url to set
+	 */
+	public void setUrl(String url) {
+		this.url = url;
 	}
 }
